@@ -1,0 +1,7 @@
+[package]
+name = "Polytope4D"
+version = "0.0.0"
+authors = ["JavaharlalNehru <javaharlalnehru@yandex.ru>", "Kugeki <grechanichenkos@yandex.ru>"]
+
+[dependencies]
+miniquad = "0.3.11"
