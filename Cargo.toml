@@ -1,7 +1,15 @@
 [package]
-name = "Polytope4D"
+name = "polytope4d"
 version = "0.0.0"
-authors = ["JavaharlalNehru <javaharlalnehru@yandex.ru>", "Kugeki <grechanichenkos@yandex.ru>"]
+authors = ["JavaharlalNehru <javaharlalnehru@yandex.ru>", "Kugeki <kugeki@list.ru>"]
+edition = "2021"
+license = "MIT/Apache-2.0"
+homepage = "https://github.com/Tetraplex2/Polytope4D"
+repository = "https://github.com/Tetraplex2/Polytope4D"
+description = """
+Polytope 4D is a desktop program which can help you create 4-dimentional models (like 3D models in Blender 3D, but not 3D and not Blender) and use them in games or in learning 4D.
+"""
 
 [dependencies]
 miniquad = "0.3.11"
+glam = {version = "0.14", features = ["scalar-math"] }
