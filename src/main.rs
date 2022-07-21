@@ -5,8 +5,6 @@ use glam::{vec3, Mat4};
 struct Stage {
     display_pipeline: Pipeline,
     display_bind: Bindings,
-    rx: f32,
-    ry: f32,
 }
 
 impl Stage {
@@ -92,18 +90,33 @@ impl Stage {
                 VertexAttribute::new("uv0", VertexFormat::Float2),
             ],
             default_shader,
-            PipelineParams {
-                depth_test: Comparison::LessOrEqual,
-                depth_write: true,
-                ..Default::default()
-            },
+			PipelineParams {
+				cull_face: CullFace::Nothing,
+				depth_test: Comparison::LessOrEqual,
+				depth_write: true,
+				color_blend: Some(BlendState::new(
+					Equation::Add,
+					BlendFactor::Value(BlendValue::SourceAlpha),
+					BlendFactor::OneMinusValue(BlendValue::SourceAlpha)
+				)),
+				alpha_blend: Some(BlendState::new(
+					Equation::Add,
+					BlendFactor::Zero,
+					BlendFactor::One)
+				),
+				primitive_type: PrimitiveType::Triangles,
+				..Default::default()
+			}
+			// PipelineParams {
+			// 	depth_test: Comparison::GreaterOrEqual,
+			// 	depth_write: true,
+			// 	..Default::default()
+			// }
         );
 
         Stage {
             display_pipeline,
             display_bind,
-            rx: 0.,
-            ry: 0.,
         }
     }
 }
@@ -119,29 +132,9 @@ impl EventHandler for Stage {
             vec3(0.0, 0.0, 0.0),
             vec3(0.0, 1.0, 0.0),
         );
-        let view_proj = proj * view;
 
-        self.rx += 0.01;
-        self.ry += 0.03;
-        let model = Mat4::from_rotation_ypr(self.rx, self.ry, 0.);
+        let vs_params = display_shader::Uniforms { mvp: proj * view };
 
-        let vs_params = display_shader::Uniforms {
-            mvp: view_proj * model,
-        };
-
-        // the offscreen pass, rendering an rotating, untextured cube into a render target image
-        // ctx.begin_pass(
-        //     self.offscreen_pass,
-        //     PassAction::clear_color(1.0, 1.0, 1.0, 1.),
-        // );
-        // ctx.apply_pipeline(&self.offscreen_pipeline);
-        // ctx.apply_bindings(&self.offscreen_bind);
-        // ctx.apply_uniforms(&vs_params);
-        // ctx.draw(0, 36, 1);
-        // ctx.end_render_pass();
-
-        // and the display-pass, rendering a rotating, textured cube, using the
-        // previously rendered offscreen render-target as texture
         ctx.begin_default_pass(PassAction::clear_color(0.0, 0., 0.45, 1.));
         ctx.apply_pipeline(&self.display_pipeline);
         ctx.apply_bindings(&self.display_bind);
