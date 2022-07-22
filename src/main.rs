@@ -1,3 +1,7 @@
+mod shader;
+mod window;
+use window::*;
+
 fn main() {
-	println!("Hello, world!");
+	Main::init();
 }
